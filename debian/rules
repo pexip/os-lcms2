@@ -9,9 +9,23 @@
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE=1
 
-%:
-	dh $@ --with autoreconf
+# additionally enable PIE and BINDNOW, https://wiki.debian.org/Hardening
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 
+# Fix for https://bugs.debian.org/749975, after changes to upstream code in 2.8
+# see also https://github.com/mm2/Little-CMS/issues/32
+# https://lists.debian.org/debian-mentors/2016/10/msg00158.html
+# Applied in /usr/share/dpkg/buildflags.mk
+export DEB_CPPFLAGS_MAINT_APPEND = -DCMS_PTR_ALIGNMENT=_Alignof\(double\)
+
+%:
+	dh $@
+
+# Use automatic dbgsym packages, starting with 2.7 versions
+# https://lists.debian.org/debian-devel/2015/12/msg00262.
 .PHONY: override_dh_strip
 override_dh_strip:
-	dh_strip --dbg-package=liblcms2-dbg
+	dh_strip --dbgsym-migration='liblcms2-dbg (<< 2.7)'
+#	dh_strip --dbg-package=liblcms2-dbg
+
+

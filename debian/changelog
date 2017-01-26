@@ -1,9 +1,52 @@
-lcms2 (2.6-3+deb8u1) jessie-security; urgency=high
+lcms2 (2.8-4) unstable; urgency=medium
 
-  * Non-maintainer upload by the Security Team.
-  * Added an extra check to MLU bounds (CVE-2016-10165) (Closes: #852627)
+  * New patch: debian/patches/fix-CVE-2016-10165.patch.
+    Fix for CVE-2016-10165. (Closes: #852627)
+    Thanks to Salvatore Bonaccorso <carnil@debian.org> 
 
- -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 27 Jan 2017 14:26:09 +0100
+ -- Thomas Weber <tweber@debian.org>  Thu, 26 Jan 2017 11:04:13 +0100
+
+lcms2 (2.8-3) unstable; urgency=medium
+
+  * New patch: lcms2-fix-strFrom16-byte-order.patch.
+    Thanks to HW42 <hw42@ipsumj.de> (Closes: #847595)
+
+ -- Thomas Weber <tweber@debian.org>  Sun, 18 Dec 2016 23:24:18 +0100
+
+lcms2 (2.8-2) unstable; urgency=medium
+
+  * Provide liblcms-dev (Closes: 830752)
+
+ -- Thomas Weber <tweber@debian.org>  Wed, 07 Dec 2016 22:41:38 +0100
+
+lcms2 (2.8-1) experimental; urgency=medium
+
+  * Imported Upstream version 2.8 (Closes: 839160)
+  * Drop patch fix-cmsnamed-alignment-issue.patch (applied upstream)
+  * Drop patch fix-unaligned-access.patch
+  * Ensure correct alignment for doubles on SPARC, mips, mipsel via CPP
+    variable
+  * Bump debhelper compat level to 10
+  * Bump standards version to 3.9.8
+
+ -- Thomas Weber <tweber@debian.org>  Sat, 29 Oct 2016 20:46:09 +0200
+
+lcms2 (2.7-1) unstable; urgency=medium
+
+  * Imported Upstream version 2.7 (Closes: 819718)
+  * No longer ship own copy of documentation source files
+  * Removed patches (applied upstream)
+    + update-manpages.patch
+    + sanity-check-profiles-CVE-2014-0459.patch
+    + endianness-verification-fix-powerpc.patch
+  * Move to automatic dbgsym packages
+  * Use secure URLs for Version Control System repository
+  * Bump Standards version to 3.9.7, no changes needed
+  * New patch: dont-write-uninitialized-memory-for-color-strings.patch
+    Thanks to Jérémy Bobbio <lunar@debian.org> (Closes: 815248)
+  * Update maintainers field (Closes: 820138)
+
+ -- Thomas Weber <tweber@debian.org>  Mon, 18 Apr 2016 15:53:10 +0200
 
 lcms2 (2.6-3) unstable; urgency=medium
 
