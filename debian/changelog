@@ -1,3 +1,16 @@
+lcms2 (2.6-3+deb8u1pexip1) pexip; urgency=low
+
+  * New upstream release
+
+ -- John-Mark Bell <jmb@pexip.com>  Tue, 09 May 2017 16:34:12 +0100
+
+lcms2 (2.6-3+deb8u1) jessie-security; urgency=high
+
+  * Non-maintainer upload by the Security Team.
+  * Added an extra check to MLU bounds (CVE-2016-10165) (Closes: #852627)
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Fri, 27 Jan 2017 14:26:09 +0100
+
 lcms2 (2.6-3pexip1) pexip; urgency=low
 
   * Prepare Pexip packaging
