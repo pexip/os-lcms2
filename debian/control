@@ -9,7 +9,7 @@ Standards-Version: 3.9.5
 Homepage: http://www.littlecms.com/
 Vcs-Git: git://anonscm.debian.org/collab-maint/lcms2.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=collab-maint/lcms2.git
-XS-Pexip-Upstream: http://ftp.debian.org/debian/ jessie
+XS-Pexip-Upstream: http://ftp.debian.org/debian/ stretch
 
 Package: liblcms2-dev
 Section: libdevel
