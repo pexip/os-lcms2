@@ -1,3 +1,9 @@
+lcms2 (2.8-4pexip1) pexip; urgency=medium
+
+  * Migrate to Stretch
+
+ -- John-Mark Bell <jmb@pexip.com>  Tue, 10 Jul 2018 11:10:00 +0000
+
 lcms2 (2.8-4) unstable; urgency=medium
 
   * New patch: debian/patches/fix-CVE-2016-10165.patch.
