@@ -1,7 +1,4 @@
-fix-cmsnamed-alignment-issue.patch
-update-manpages.patch
 prepare-for-libtoolizing.patch
-sanity-check-profiles-CVE-2014-0459.patch
-fix-unaligned-access.patch
-endianness-verification-fix-powerpc.patch
-Added-an-extra-check-to-MLU-bounds.patch
+dont-write-uninitialized-memory-for-color-strings.patch
+lcms2-fix-strFrom16-byte-order.patch
+fix-CVE-2016-10165.patch
