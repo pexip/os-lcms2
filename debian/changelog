@@ -1,3 +1,15 @@
+lcms2 (2.8-4+deb9u1pexip1) pexip; urgency=medium
+
+  * New upstream release
+
+ -- John-Mark Bell <jmb@pexip.com>  Tue, 04 Sep 2018 22:44:42 +0100
+
+lcms2 (2.8-4+deb9u1) stretch-security; urgency=medium
+
+  * CVE-2018-16435
+
+ -- Moritz Mühlenhoff <jmm@debian.org>  Tue, 04 Sep 2018 17:59:35 +0200
+
 lcms2 (2.8-4pexip1) pexip; urgency=medium
 
   * Migrate to Stretch
