@@ -1,14 +1,44 @@
+lcms2 (2.9-3) unstable; urgency=medium
+
+  * Fix integer overflow in AllocateDataSet() (CVE-2018-16435)
+    Thanks to Salvatore Bonaccorso <carnil@debian.org> and 
+    Marti Maria <marti.maria@littlecms.com>
+    (Closes: #907983)
+
+ -- Thomas Weber <tweber@debian.org>  Wed, 05 Sep 2018 17:59:06 +0200
+
+lcms2 (2.9-2) unstable; urgency=medium
+
+  * Switch Vcs links to salsa.debian.org
+  * Add Build-Depends-Package header to symbols file (see #900819)
+    Thanks to Andreas Henriksson <andreas@fatal.se>
+  * Bump standards version to 4.1.4, no changes needed
+
+ -- Thomas Weber <tweber@debian.org>  Sat, 09 Jun 2018 22:33:22 +0200
+
+lcms2 (2.9-1) unstable; urgency=medium
+
+  * New upstream version 2.9:
+    - Drop patch fix-CVE-2016-10165 (applied upstream)
+    - Drop patch lcms2-fix-strFrom16-byte-order.patch (applied upstream)
+    - Update patch dont-write-uninitialized-memory-for-color-strings.patch
+    - Update patch prepare-for-libtoolizing.patch
+    - Update symbols file for 2.9 version.
+      The 2.9 release no longer exports private symbols.
+    - Update doc-base files for new 2.9 upstream version
+  * Remove build-depends on dh-autoreconf.
+    We depend on debhelper >= 10, so this is automatically enabled
+    Thanks to lintian
+  * Bump standards version from 3.9.8 to 4.1.2:
+    - Use httpS in the "Format" field of debian/copyright. (policy 4.0.0)
+
+ -- Thomas Weber <tweber@debian.org>  Sun, 17 Dec 2017 15:52:01 +0100
+
 lcms2 (2.8-4+deb9u1pexip1) pexip; urgency=medium
 
   * New upstream release
 
  -- John-Mark Bell <jmb@pexip.com>  Tue, 04 Sep 2018 22:44:42 +0100
-
-lcms2 (2.8-4+deb9u1) stretch-security; urgency=medium
-
-  * CVE-2018-16435
-
- -- Moritz Mühlenhoff <jmm@debian.org>  Tue, 04 Sep 2018 17:59:35 +0200
 
 lcms2 (2.8-4pexip1) pexip; urgency=medium
 
@@ -20,7 +50,7 @@ lcms2 (2.8-4) unstable; urgency=medium
 
   * New patch: debian/patches/fix-CVE-2016-10165.patch.
     Fix for CVE-2016-10165. (Closes: #852627)
-    Thanks to Salvatore Bonaccorso <carnil@debian.org> 
+    Thanks to Salvatore Bonaccorso <carnil@debian.org>
 
  -- Thomas Weber <tweber@debian.org>  Thu, 26 Jan 2017 11:04:13 +0100
 

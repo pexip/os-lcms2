@@ -11,32 +11,23 @@ Bug-Debian: http://bugs.debian.org/815248
 Forwarded: https://github.com/mm2/Little-CMS/issues/70
 --- a/src/cmstypes.c
 +++ b/src/cmstypes.c
-@@ -3018,6 +3018,8 @@
-         char root[33];
-         cmsUInt16Number PCS[3];
- 
-+	// Ensure we don't write uninitialized memory.
-+        memset(root, 0, 33);
-         if (!cmsNamedColorInfo(NamedColorList, i, root, NULL, NULL, PCS, NULL)) return 0;
-         root[32] = 0;
- 
-@@ -3143,6 +3145,10 @@
+@@ -3174,6 +3174,10 @@
      if (!_cmsWriteUInt32Number(io, nColors)) return FALSE;
      if (!_cmsWriteUInt32Number(io, NamedColorList ->ColorantCount)) return FALSE;
  
 +    // Ensure we don't write unitialized memory.
-+    memset(prefix, 0, 32);
-+    memset(suffix, 0, 32);
++    memset(prefix, 0, sizeof(prefix));
++    memset(suffix, 0, sizeof(suffix));
 +
      strncpy(prefix, (const char*) NamedColorList->Prefix, 32);
      strncpy(suffix, (const char*) NamedColorList->Suffix, 32);
  
-@@ -3157,6 +3163,8 @@
+@@ -3188,6 +3192,8 @@
         cmsUInt16Number Colorant[cmsMAXCHANNELS];
-        char Root[33];
+        char Root[cmsMAX_PATH];
  
 +	// Ensure we don't write unitialized memory.
-+	memset(Root, 0, 33);
++        memset(Root, 0, sizeof(Root));
          if (!cmsNamedColorInfo(NamedColorList, i, Root, NULL, NULL, PCS, Colorant)) return 0;
          Root[32] = 0;
          if (!io ->Write(io, 32 , Root)) return FALSE;

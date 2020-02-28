@@ -11,7 +11,7 @@ Applied-Upstream: <version|URL|commit, identifies patches merged upstream, optio
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/configure.ac
 +++ b/configure.ac
-@@ -355,6 +355,15 @@
+@@ -364,6 +364,15 @@
  TIFFICC_DEPLIBS=`echo $TIFFICC_DEPLIBS | sed -e 's/  */ /g'`
  AC_SUBST(TIFFICC_DEPLIBS)
  
@@ -27,17 +27,6 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  LIBS=''
  
  #
---- a/testbed/Makefile.am
-+++ b/testbed/Makefile.am
-@@ -11,7 +11,7 @@
- 
- # CFLAGS = --pedantic -Wall -std=c99 -O2
- 
--testcms_LDADD = $(top_builddir)/src/liblcms2.la 
-+testcms_LDADD = $(top_builddir)/src/liblcms2.la @TESTBED_DEPLIBS@
- testcms_LDFLAGS = @LDFLAGS@
- testcms_SOURCES = testcms2.c testplugin.c zoo_icc.c testcms2.h
- 
 --- a/utils/transicc/Makefile.am
 +++ b/utils/transicc/Makefile.am
 @@ -11,7 +11,7 @@
