@@ -1,3 +1,9 @@
+lcms2 (2.9-3pexip1) pexip; urgency=medium
+
+  * Migrate to Buster
+
+ -- Vincent Sanders <vince@pexip.com>  Fri, 28 Feb 2020 22:54:49 +0000
+
 lcms2 (2.9-3) unstable; urgency=medium
 
   * Fix integer overflow in AllocateDataSet() (CVE-2018-16435)
