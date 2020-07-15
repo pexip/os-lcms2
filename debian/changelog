@@ -1,3 +1,9 @@
+lcms2 (2.9-3pexip2) pexip; urgency=medium
+
+  * Rebuild in buster environment
+
+ -- Steve McIntyre <steve.mcintyre@pexip.com>  Wed, 15 Jul 2020 20:24:35 +0000
+
 lcms2 (2.9-3pexip1) pexip; urgency=medium
 
   * Migrate to Buster
