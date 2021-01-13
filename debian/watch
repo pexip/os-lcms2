@@ -1,5 +1,5 @@
-# Compulsory line, this is a version 3 file
-version=3
+# Compulsory line, this is a version 4 file
+version=4
 
 # Uncomment to find new files on sourceforge, for devscripts >= 2.9
-http://sf.net/lcms/lcms2-(.*)\.tar\.gz
+https://sf.net/lcms/lcms2-(.*)\.tar\.gz
