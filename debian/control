@@ -8,7 +8,7 @@ Standards-Version: 4.1.4
 Homepage: http://www.littlecms.com/
 Vcs-Git: https://salsa.debian.org/debian/lcms2.git
 Vcs-Browser: https://salsa.debian.org/debian/lcms2
-XS-Pexip-Upstream: http://ftp.debian.org/debian/ buster
+XS-Pexip-Upstream: http://deb.debian.org/debian/ bullseye
 
 Package: liblcms2-dev
 Section: libdevel
