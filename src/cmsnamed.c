@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 //
 //  Little Color Management System
-//  Copyright (c) 1998-2017 Marti Maria Saguer
+//  Copyright (c) 1998-2020 Marti Maria Saguer
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the "Software"),
@@ -200,6 +200,7 @@ void strFrom16(char str[3], cmsUInt16Number n)
 }
 
 // Add an ASCII entry. Do not add any \0 termination (ICC1v43_2010-12.pdf page 61)
+// In the case the user explicitely sets an empty string, we force a \0
 cmsBool CMSEXPORT cmsMLUsetASCII(cmsMLU* mlu, const char LanguageCode[3], const char CountryCode[3], const char* ASCIIString)
 {
     cmsUInt32Number i, len = (cmsUInt32Number) strlen(ASCIIString);
@@ -209,6 +210,12 @@ cmsBool CMSEXPORT cmsMLUsetASCII(cmsMLU* mlu, const char LanguageCode[3], const 
     cmsUInt16Number Cntry = strTo16(CountryCode);
 
     if (mlu == NULL) return FALSE;
+
+    // len == 0 would prevent operation, so we set a empty string pointing to zero
+    if (len == 0)
+    {
+        len = 1;
+    }
 
     WStr = (wchar_t*) _cmsCalloc(mlu ->ContextID, len,  sizeof(wchar_t));
     if (WStr == NULL) return FALSE;
@@ -247,6 +254,9 @@ cmsBool  CMSEXPORT cmsMLUsetWide(cmsMLU* mlu, const char Language[3], const char
     if (WideString == NULL) return FALSE;
 
     len = (cmsUInt32Number) (mywcslen(WideString)) * sizeof(wchar_t);
+    if (len == 0)
+        len = sizeof(wchar_t);
+
     return AddMLUBlock(mlu, len, WideString, Lang, Cntry);
 }
 
@@ -538,7 +548,7 @@ cmsNAMEDCOLORLIST* CMSEXPORT cmsAllocNamedColorList(cmsContext ContextID, cmsUIn
 
     while (v -> Allocated < n) {
         if (!GrowNamedColorList(v)) {
-            _cmsFree(ContextID, (void*) v);
+            cmsFreeNamedColorList(v);
             return NULL;
         }
     }
@@ -571,7 +581,11 @@ cmsNAMEDCOLORLIST* CMSEXPORT cmsDupNamedColorList(const cmsNAMEDCOLORLIST* v)
 
     // For really large tables we need this
     while (NewNC ->Allocated < v ->Allocated){
-        if (!GrowNamedColorList(NewNC)) return NULL;
+        if (!GrowNamedColorList(NewNC))
+        {
+            cmsFreeNamedColorList(NewNC);
+            return NULL;
+        }
     }
 
     memmove(NewNC ->Prefix, v ->Prefix, sizeof(v ->Prefix));

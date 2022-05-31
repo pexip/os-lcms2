@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 //
 //  Little Color Management System
-//  Copyright (c) 1998-2013 Marti Maria Saguer
+//  Copyright (c) 1998-2020 Marti Maria Saguer
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the "Software"),
@@ -59,11 +59,11 @@ static cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFl
 
 // The built-in list
 static _cmsParametricCurvesCollection DefaultCurves = {
-    9,                                  // # of curve types
-    { 1, 2, 3, 4, 5, 6, 7, 8, 108 },    // Parametric curve ID
-    { 1, 3, 4, 5, 7, 4, 5, 5, 1 },      // Parameters by type
-    DefaultEvalParametricFn,            // Evaluator
-    NULL                                // Next in chain
+    10,                                      // # of curve types
+    { 1, 2, 3, 4, 5, 6, 7, 8, 108, 109 },    // Parametric curve ID
+    { 1, 3, 4, 5, 7, 4, 5, 5,   1,   1 },    // Parameters by type
+    DefaultEvalParametricFn,                 // Evaluator
+    NULL                                     // Next in chain
 };
 
 // Duplicates the zone of memory used by the plug-in in the new context
@@ -300,11 +300,38 @@ cmsToneCurve* AllocateToneCurveStruct(cmsContext ContextID, cmsUInt32Number nEnt
         return p;
 
 Error:
-    if (p -> Segments) _cmsFree(ContextID, p ->Segments);
+    if (p -> SegInterp) _cmsFree(ContextID, p -> SegInterp);
+    if (p -> Segments) _cmsFree(ContextID, p -> Segments);
     if (p -> Evals) _cmsFree(ContextID, p -> Evals);
     if (p ->Table16) _cmsFree(ContextID, p ->Table16);
     _cmsFree(ContextID, p);
     return NULL;
+}
+
+
+// Generates a sigmoidal function with desired steepness.
+cmsINLINE double sigmoid_base(double k, double t)
+{
+    return (1.0 / (1.0 + exp(-k * t))) - 0.5;
+}
+
+cmsINLINE double inverted_sigmoid_base(double k, double t)
+{
+    return -log((1.0 / (t + 0.5)) - 1.0) / k;
+}
+
+cmsINLINE double sigmoid_factory(double k, double t)
+{
+    double correction = 0.5 / sigmoid_base(k, 1);
+
+    return correction * sigmoid_base(k, 2.0 * t - 1.0) + 0.5;
+}
+
+cmsINLINE double inverse_sigmoid_factory(double k, double t)
+{
+    double correction = 0.5 / sigmoid_base(k, 1);
+
+    return (inverted_sigmoid_base(k, (t - 0.5) / correction) + 1.0) / 2.0;
 }
 
 
@@ -639,6 +666,7 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
        }
        break;
 
+
    // S-Shaped: (1 - (1-x)^1/g)^1/g
    case 108:
        if (fabs(Params[0]) < MATRIX_DET_TOLERANCE)
@@ -654,6 +682,15 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
     // 1 - (1 - y^g)^g
     case -108:
         Val = 1 - pow(1 - pow(R, Params[0]), Params[0]);
+        break;
+
+    // Sigmoidals
+    case 109:
+        Val = sigmoid_factory(Params[0], R);
+        break;
+
+    case -109:
+        Val = inverse_sigmoid_factory(Params[0], R);
         break;
 
     default:
@@ -817,7 +854,7 @@ cmsToneCurve* CMSEXPORT cmsBuildTabulatedToneCurveFloat(cmsContext ContextID, cm
 //
 // Parameters goes as: Curve, a, b, c, d, e, f
 // Type is the ICC type +1
-// if type is negative, then the curve is analyticaly inverted
+// if type is negative, then the curve is analytically inverted
 cmsToneCurve* CMSEXPORT cmsBuildParametricToneCurve(cmsContext ContextID, cmsInt32Number Type, const cmsFloat64Number Params[])
 {
     cmsCurveSegment Seg0;
@@ -888,7 +925,7 @@ void CMSEXPORT cmsFreeToneCurve(cmsToneCurve* Curve)
     if (Curve -> Evals)
         _cmsFree(ContextID, Curve -> Evals);
 
-    if (Curve) _cmsFree(ContextID, Curve);
+    _cmsFree(ContextID, Curve);
 }
 
 // Utility function, free 3 gamma tables
@@ -1155,6 +1192,7 @@ cmsBool  CMSEXPORT cmsSmoothToneCurve(cmsToneCurve* Tab, cmsFloat64Number lambda
     cmsBool SuccessStatus = TRUE;
     cmsFloat32Number *w, *y, *z;
     cmsUInt32Number i, nItems, Zeros, Poles;
+    cmsBool notCheck = FALSE;
 
     if (Tab != NULL && Tab->InterpParams != NULL)
     {
@@ -1182,6 +1220,12 @@ cmsBool  CMSEXPORT cmsSmoothToneCurve(cmsToneCurve* Tab, cmsFloat64Number lambda
                         w[i + 1] = 1.0;
                     }
 
+                    if (lambda < 0)
+                    {
+                        notCheck = TRUE;
+                        lambda = -lambda;
+                    }
+
                     if (smooth2(ContextID, w, y, z, (cmsFloat32Number)lambda, (int)nItems))
                     {
                         // Do some reality - checking...
@@ -1194,7 +1238,7 @@ cmsBool  CMSEXPORT cmsSmoothToneCurve(cmsToneCurve* Tab, cmsFloat64Number lambda
                             if (z[i] < z[i - 1])
                             {
                                 cmsSignalError(ContextID, cmsERROR_RANGE, "cmsSmoothToneCurve: Non-Monotonic.");
-                                SuccessStatus = FALSE;
+                                SuccessStatus = notCheck;
                                 break;
                             }
                         }
@@ -1202,13 +1246,13 @@ cmsBool  CMSEXPORT cmsSmoothToneCurve(cmsToneCurve* Tab, cmsFloat64Number lambda
                         if (SuccessStatus && Zeros > (nItems / 3))
                         {
                             cmsSignalError(ContextID, cmsERROR_RANGE, "cmsSmoothToneCurve: Degenerated, mostly zeros.");
-                            SuccessStatus = FALSE;
+                            SuccessStatus = notCheck;
                         }
 
                         if (SuccessStatus && Poles > (nItems / 3))
                         {
                             cmsSignalError(ContextID, cmsERROR_RANGE, "cmsSmoothToneCurve: Degenerated, mostly poles.");
-                            SuccessStatus = FALSE;
+                            SuccessStatus = notCheck;
                         }
 
                         if (SuccessStatus) // Seems ok
@@ -1258,7 +1302,7 @@ cmsBool  CMSEXPORT cmsSmoothToneCurve(cmsToneCurve* Tab, cmsFloat64Number lambda
 }
 
 // Is a table linear? Do not use parametric since we cannot guarantee some weird parameters resulting
-// in a linear table. This way assures it is linear in 12 bits, which should be enought in most cases.
+// in a linear table. This way assures it is linear in 12 bits, which should be enough in most cases.
 cmsBool CMSEXPORT cmsIsToneCurveLinear(const cmsToneCurve* Curve)
 {
     int i;
@@ -1430,4 +1474,15 @@ cmsFloat64Number CMSEXPORT cmsEstimateGamma(const cmsToneCurve* t, cmsFloat64Num
         return -1.0;
 
     return (sum / n);   // The mean
+}
+
+
+// Retrieve parameters on one-segment tone curves
+
+cmsFloat64Number* CMSEXPORT cmsGetToneCurveParams(const cmsToneCurve* t)
+{
+    _cmsAssert(t != NULL);
+
+    if (t->nSegments != 1) return NULL;
+    return t->Segments[0].Params;
 }
