@@ -1,3 +1,33 @@
+lcms2 (2.12~rc1-2) unstable; urgency=medium
+
+  * Brown paperbag release: upload source only to the buildds. 
+
+ -- Thomas Weber <tweber@debian.org>  Wed, 13 Jan 2021 17:50:17 +0100
+
+lcms2 (2.12~rc1-1) unstable; urgency=medium
+
+  * New upstream version 2.12~rc1 (Closes: #972925)
+  * Update copyright information
+  * Bump standards version to 4.5.1, no changes needed
+  * Bump debhelper compat level to 13
+  * Switch to automatic generation of dbgsym package
+  * Remove patch CVE-2018-16435.patch - applied upstream
+  * Switch to format 4 of debian/watch
+
+ -- Thomas Weber <tweber@debian.org>  Wed, 13 Jan 2021 03:47:09 +0100
+
+lcms2 (2.9-4) unstable; urgency=medium
+
+  [ Ondřej Nový ]
+  * d/changelog: Remove trailing whitespaces
+  * d/watch: Use https protocol
+
+  [ Thomas Weber ]
+  * Bump standards version to 4.4.0, no changes needed
+  * dh_strip_nondeterminism should not normalize src.zip (Closes: #935177)
+
+ -- Thomas Weber <tweber@debian.org>  Mon, 09 Sep 2019 22:40:46 +0200
+
 lcms2 (2.9-3pexip3) pexip; urgency=medium
 
   * Rebuild in buster environment
@@ -19,7 +49,7 @@ lcms2 (2.9-3pexip1) pexip; urgency=medium
 lcms2 (2.9-3) unstable; urgency=medium
 
   * Fix integer overflow in AllocateDataSet() (CVE-2018-16435)
-    Thanks to Salvatore Bonaccorso <carnil@debian.org> and 
+    Thanks to Salvatore Bonaccorso <carnil@debian.org> and
     Marti Maria <marti.maria@littlecms.com>
     (Closes: #907983)
 

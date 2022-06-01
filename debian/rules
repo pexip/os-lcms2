@@ -21,11 +21,9 @@ export DEB_CPPFLAGS_MAINT_APPEND = -DCMS_PTR_ALIGNMENT=_Alignof\(double\)
 %:
 	dh $@
 
-# Use automatic dbgsym packages, starting with 2.7 versions
-# https://lists.debian.org/debian-devel/2015/12/msg00262.
-.PHONY: override_dh_strip
-override_dh_strip:
-	dh_strip --dbgsym-migration='liblcms2-dbg (<< 2.7)'
-#	dh_strip --dbg-package=liblcms2-dbg
-
-
+# dh_strip_nondeterminism repackages the src.zip file, which is completely
+# unnecessary
+# Bug fix for 935177
+.PHONY: override_dh_strip_nondeterminism
+override_dh_strip_nondeterminism:
+	dh_strip_nondeterminism --exclude=src.zip

@@ -11,7 +11,7 @@ Bug-Debian: http://bugs.debian.org/815248
 Forwarded: https://github.com/mm2/Little-CMS/issues/70
 --- a/src/cmstypes.c
 +++ b/src/cmstypes.c
-@@ -3174,6 +3174,10 @@
+@@ -3168,6 +3168,10 @@
      if (!_cmsWriteUInt32Number(io, nColors)) return FALSE;
      if (!_cmsWriteUInt32Number(io, NamedColorList ->ColorantCount)) return FALSE;
  
@@ -22,7 +22,7 @@ Forwarded: https://github.com/mm2/Little-CMS/issues/70
      strncpy(prefix, (const char*) NamedColorList->Prefix, 32);
      strncpy(suffix, (const char*) NamedColorList->Suffix, 32);
  
-@@ -3188,6 +3192,8 @@
+@@ -3182,6 +3186,8 @@
         cmsUInt16Number Colorant[cmsMAXCHANNELS];
         char Root[cmsMAX_PATH];
  
