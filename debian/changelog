@@ -1,3 +1,9 @@
+lcms2 (2.12~rc1-2pexip1) pexip; urgency=medium
+
+  * Initial bullseye build
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 02 Jun 2022 14:42:22 +0100
+
 lcms2 (2.12~rc1-2) unstable; urgency=medium
 
   * Brown paperbag release: upload source only to the buildds. 
