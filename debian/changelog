@@ -1,6 +1,51 @@
+lcms2 (2.14-2) unstable; urgency=medium
+
+  * New patch: allow-to-read-portions-of-tag.diff.
+    Thanks to s3v <c0llapsed@yahoo.it> (Closes: #1028664)
+  * Update copyright information for plugins.
+    Thanks to Florian Ernst <florian_ernst@gmx.net>
+  * Bump standards version to 4.6.2, no changes needed
+
+ -- Thomas Weber <tweber@debian.org>  Sun, 19 Feb 2023 22:32:28 +0100
+
+lcms2 (2.14-1) unstable; urgency=medium
+
+  [ Thomas Weber ]
+  * New upstream version 2.14
+    - Refresh patches
+    - New patches:
+      + debian/patches/fix-regression-for-CMYK-colours.patch
+      + debian/patches/fix-memory-corruption-when-unregistering-plugins.diff
+    - Update symbols file for new 2.14 upstream release
+    - Update doc-base files for new 2.14 upstream version
+  * debian/control: Drop versioned constraint on dpkg-dev
+
+  [ Florian Ernst ]
+  * debian/copyright:
+    - update copyright years to reflect recent changes
+    - utils/jpgicc/iccjpeg.* is licensed under IJG
+    - drop optional License header
+  * migrate from debian/compat to Build-Depends: debhelper-compat (= 13)
+  * keep updated manpages as provided via upstream (but with minor cleanup)
+  * debian/control: declare Rules-Requires-Root: no
+
+ -- Thomas Weber <tweber@debian.org>  Thu, 05 Jan 2023 21:51:23 +0100
+
+lcms2 (2.13.1-1) unstable; urgency=medium
+
+  * New upstream version 2.13.1 (Closes: #1007752)
+    - Refresh patches
+    - Remove patch dont-write-uninitialized-memory-for-color-strings.patch
+      - applied upstream
+    - Update doc-base files for new 2.13 upstream version
+    - Update symbols file for 2.13 release
+  * Bump standards version to 4.6.1, no changes needed
+
+ -- Thomas Weber <tweber@debian.org>  Fri, 22 Jul 2022 00:52:13 +0200
+
 lcms2 (2.12~rc1-2) unstable; urgency=medium
 
-  * Brown paperbag release: upload source only to the buildds. 
+  * Brown paperbag release: upload source only to the buildds.
 
  -- Thomas Weber <tweber@debian.org>  Wed, 13 Jan 2021 17:50:17 +0100
 

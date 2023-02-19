@@ -1,0 +1,28 @@
+Description: clean up manpages
+ In particular, "warning: macro 'p' not defined" can be fixed just by dropping
+ that.
+Author: Florian Ernst <florian@debian.org>
+Index: lcms2/utils/psicc/psicc.1
+===================================================================
+--- lcms2.orig/utils/psicc/psicc.1
++++ lcms2/utils/psicc/psicc.1
+@@ -26,7 +26,6 @@ Input profile: Generates Color Space Arr
+ Alternate way to set precision, number of CLUT points (CRD only).
+ .TP
+ .BI \-o\  profile
+-.p
+ Output profile: Generates Color Rendering Dictionary(CRD).
+ .TP
+ .BI \-t\  intent
+Index: lcms2/utils/transicc/transicc.1
+===================================================================
+--- lcms2.orig/utils/transicc/transicc.1
++++ lcms2/utils/transicc/transicc.1
+@@ -41,7 +41,6 @@ SoftProof intent (0,1,2,3) [defaults to
+ Terse output, intended for pipe usage.
+ .TP
+ .BI \-o\  profile
+-.p
+ Output profile (defaults to sRGB).
+ .TP
+ .B \-q

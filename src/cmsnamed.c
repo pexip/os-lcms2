@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 //
 //  Little Color Management System
-//  Copyright (c) 1998-2020 Marti Maria Saguer
+//  Copyright (c) 1998-2022 Marti Maria Saguer
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the "Software"),
@@ -180,12 +180,16 @@ cmsBool AddMLUBlock(cmsMLU* mlu, cmsUInt32Number size, const wchar_t *Block,
 
 // Convert from a 3-char code to a cmsUInt16Number. It is done in this way because some
 // compilers don't properly align beginning of strings
-
 static
 cmsUInt16Number strTo16(const char str[3])
 {   
-    const cmsUInt8Number* ptr8 = (const cmsUInt8Number*)str;
-    cmsUInt16Number n = (cmsUInt16Number)(((cmsUInt16Number)ptr8[0] << 8) | ptr8[1]);
+    const cmsUInt8Number* ptr8;
+    cmsUInt16Number n;
+
+    // For non-existent strings
+    if (str == NULL) return 0;
+    ptr8 = (const cmsUInt8Number*)str;
+    n = (cmsUInt16Number)(((cmsUInt16Number)ptr8[0] << 8) | ptr8[1]);
 
     return n;
 }
@@ -200,7 +204,7 @@ void strFrom16(char str[3], cmsUInt16Number n)
 }
 
 // Add an ASCII entry. Do not add any \0 termination (ICC1v43_2010-12.pdf page 61)
-// In the case the user explicitely sets an empty string, we force a \0
+// In the case the user explicitly sets an empty string, we force a \0
 cmsBool CMSEXPORT cmsMLUsetASCII(cmsMLU* mlu, const char LanguageCode[3], const char CountryCode[3], const char* ASCIIString)
 {
     cmsUInt32Number i, len = (cmsUInt32Number) strlen(ASCIIString);
@@ -538,10 +542,14 @@ cmsBool  GrowNamedColorList(cmsNAMEDCOLORLIST* v)
 // Allocate a list for n elements
 cmsNAMEDCOLORLIST* CMSEXPORT cmsAllocNamedColorList(cmsContext ContextID, cmsUInt32Number n, cmsUInt32Number ColorantCount, const char* Prefix, const char* Suffix)
 {
-    cmsNAMEDCOLORLIST* v = (cmsNAMEDCOLORLIST*) _cmsMallocZero(ContextID, sizeof(cmsNAMEDCOLORLIST));
-
+    cmsNAMEDCOLORLIST* v;
+    
+    if (ColorantCount > cmsMAXCHANNELS) 
+        return NULL;
+   
+    v = (cmsNAMEDCOLORLIST*)_cmsMallocZero(ContextID, sizeof(cmsNAMEDCOLORLIST));
     if (v == NULL) return NULL;
-
+    
     v ->List      = NULL;
     v ->nColors   = 0;
     v ->ContextID  = ContextID;
@@ -637,7 +645,7 @@ cmsUInt32Number CMSEXPORT cmsNamedColorCount(const cmsNAMEDCOLORLIST* NamedColor
      return NamedColorList ->nColors;
 }
 
-// Info aboout a given color
+// Info about a given color
 cmsBool  CMSEXPORT cmsNamedColorInfo(const cmsNAMEDCOLORLIST* NamedColorList, cmsUInt32Number nColor,
                                      char* Name,
                                      char* Prefix,

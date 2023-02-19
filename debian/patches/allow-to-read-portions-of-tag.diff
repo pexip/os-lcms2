@@ -1,0 +1,39 @@
+Description: Allow reading portions of tag UNLESS the tag has been modified by cmsWriteTag
+ This allows colord to build - it is using this undocumented feature. 
+Author: Marti Maria Saguer <marti.maria@littlecms.com>
+Origin: upstream, https://github.com/mm2/Little-CMS/commit/93629504f817
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1028664
+Forwarded: not-needed
+Applied-Upstream: https://github.com/mm2/Little-CMS/commit/93629504f817
+Last-Update: 2023-02-19
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/src/cmsio0.c
++++ b/src/cmsio0.c
+@@ -1922,7 +1922,7 @@
+         if (data != NULL) {
+ 
+             if (BufferSize < TagSize)
+-                goto Error;
++                TagSize = BufferSize;
+ 
+             if (!Icc ->IOhandler ->Seek(Icc ->IOhandler, Offset)) goto Error;
+             if (!Icc ->IOhandler ->Read(Icc ->IOhandler, data, 1, TagSize)) goto Error;
+@@ -1935,7 +1935,7 @@
+         return Icc ->TagSizes[i];
+     }
+ 
+-    // The data has been already read, or written. But wait!, maybe the user chose to save as
++    // The data has been already read, or written. But wait!, maybe the user choose to save as
+     // raw data. In this case, return the raw data directly
+     
+     if (Icc ->TagSaveAsRaw[i]) {
+@@ -1944,7 +1944,7 @@
+ 
+             TagSize  = Icc ->TagSizes[i];
+             if (BufferSize < TagSize)
+-                goto Error;
++                TagSize = BufferSize;
+ 
+             memmove(data, Icc ->TagPtrs[i], TagSize);
+ 
