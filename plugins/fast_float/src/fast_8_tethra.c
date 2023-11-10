@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 //
 //  Little Color Management System, fast floating point extensions
-//  Copyright (c) 1998-2020 Marti Maria Saguer, all rights reserved
+//  Copyright (c) 1998-2022 Marti Maria Saguer, all rights reserved
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -249,11 +249,13 @@ void PerformanceEval8(struct _cmstransform_struct *CMMcargo,
                                                                *out[OutChan] = FROM_16_TO_8(res16);
                                                                out[OutChan] += DestIncrements[OutChan];
 
-                                                               if (ain)
-                                                                      *out[TotalOut] = *ain;
-
                      }
 
+                     if (ain) {
+                         *out[TotalOut] = *ain;
+                         ain += SourceIncrements[3];
+                         out[TotalOut] += DestIncrements[TotalOut];
+                     }
 
               }
 
@@ -341,12 +343,10 @@ cmsBool Optimize8BitRGBTransform(_cmsTransform2Fn* TransformFn,
     cmsToneCurve *Trans[cmsMAXCHANNELS], *TransReverse[cmsMAXCHANNELS];
     cmsUInt32Number t, i, j;  
     cmsFloat32Number v, In[cmsMAXCHANNELS], Out[cmsMAXCHANNELS];
-    cmsBool lIsSuitable, lIsLinear;
+    cmsBool lIsSuitable;
     cmsPipeline* OptimizedLUT = NULL, *LutPlusCurves = NULL;    
     cmsStage* OptimizedCLUTmpe;
-    cmsColorSpaceSignature OutputColorSpace;
     cmsStage* OptimizedPrelinMpe;
-    cmsStage* mpe;
     Performance8Data* p8;
     cmsUInt16Number* MyTable[3];
     cmsContext ContextID;
@@ -355,7 +355,7 @@ cmsBool Optimize8BitRGBTransform(_cmsTransform2Fn* TransformFn,
     // For empty transforms, do nothing
     if (*Lut == NULL) return FALSE;
 
-    // This is a loosy optimization! does not apply in floating-point cases
+    // This is a lossy optimization! does not apply in floating-point cases
     if (T_FLOAT(*InputFormat) || T_FLOAT(*OutputFormat)) return FALSE;
 
     // Only on 8-bit
@@ -364,17 +364,13 @@ cmsBool Optimize8BitRGBTransform(_cmsTransform2Fn* TransformFn,
     // Only on RGB
     if (T_COLORSPACE(*InputFormat)  != PT_RGB) return FALSE;
    
+    // This optimization only works on RGB8->RGB8 or RGB8->CMYK8
+    if (T_COLORSPACE(*OutputFormat) != PT_RGB &&
+        T_COLORSPACE(*OutputFormat) != PT_CMYK) return FALSE;
+
     OriginalLut = *Lut;
-
-   // Named color pipelines cannot be optimized either
-   for (mpe = cmsPipelineGetPtrToFirstStage(OriginalLut);
-         mpe != NULL;
-         mpe = cmsStageNext(mpe)) {
-            if (cmsStageType(mpe) == cmsSigNamedColorElemType) return FALSE;
-    }
-
+   
     ContextID = cmsGetPipelineContextID(OriginalLut);
-    OutputColorSpace = _cmsICCcolorSpace(T_COLORSPACE(*OutputFormat));
     nGridPoints      = _cmsReasonableGridpointsByColorspace(cmsSigRgbData, *dwFlags);
 
     // Empty gamma containers
@@ -417,17 +413,8 @@ cmsBool Optimize8BitRGBTransform(_cmsTransform2Fn* TransformFn,
 
     // Check for validity
     lIsSuitable = TRUE;
-    lIsLinear   = TRUE;
     for (t=0; (lIsSuitable && (t < 3)); t++) {
-
-        // Exclude if already linear
-        if (!cmsIsToneCurveLinear(Trans[t]))
-            lIsLinear = FALSE;
-
-        // Exclude if non-monotonic
-        if (!cmsIsToneCurveMonotonic(Trans[t]))
-            lIsSuitable = FALSE;         
-
+        
         if (IsDegenerated(Trans[t]))
             lIsSuitable = FALSE;
     }
