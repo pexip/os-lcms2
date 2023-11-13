@@ -11,7 +11,7 @@ Applied-Upstream: <version|URL|commit, identifies patches merged upstream, optio
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 --- a/configure.ac
 +++ b/configure.ac
-@@ -363,6 +363,15 @@
+@@ -410,6 +410,15 @@
  TIFFICC_DEPLIBS=`echo $TIFFICC_DEPLIBS | sed -e 's/  */ /g'`
  AC_SUBST(TIFFICC_DEPLIBS)
  
