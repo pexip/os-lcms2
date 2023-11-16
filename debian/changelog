@@ -1,3 +1,9 @@
+lcms2 (2.14-2pexip1) pexip-bookworm; urgency=medium
+
+  * Initial bookworm build
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 16 Nov 2023 10:05:23 +0000
+
 lcms2 (2.14-2) unstable; urgency=medium
 
   * New patch: allow-to-read-portions-of-tag.diff.
