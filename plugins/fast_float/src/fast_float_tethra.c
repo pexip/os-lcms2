@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 //
 //  Little Color Management System, fast floating point extensions
-//  Copyright (c) 1998-2022 Marti Maria Saguer, all rights reserved
+//  Copyright (c) 1998-2023 Marti Maria Saguer, all rights reserved
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -299,6 +299,10 @@ cmsBool OptimizeCLUTRGBTransform(_cmsTransform2Fn* TransformFn,
             if (lab_fix == NULL) goto Error;
 
             cmsPipelineInsertStage(OriginalLut, cmsAT_END, lab_fix);
+        }
+        else {
+            if (T_COLORSPACE(*OutputFormat) != PT_GRAY &&
+                T_COLORSPACE(*OutputFormat) != PT_RGB) return FALSE;
         }
 
 

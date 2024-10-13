@@ -1,5 +1,5 @@
 prepare-for-libtoolizing.patch
-fix-regression-for-CMYK-colours.patch
-fix-memory-corruption-when-unregistering-plugins.diff
 manpages-cleanup.patch
-allow-to-read-portions-of-tag.diff
+unbreak-API-compatibility.patch
+build-plugins-as-static-libraries-only.patch
+keep-src-tree-clean.patch

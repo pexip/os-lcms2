@@ -2,6 +2,10 @@ Description: clean up manpages
  In particular, "warning: macro 'p' not defined" can be fixed just by dropping
  that.
 Author: Florian Ernst <florian@debian.org>
+Origin: Debian
+Forwarded: not-needed
+Applied-Upstream: https://github.com/mm2/Little-CMS/commit/802de2f92c50139b98ae959b9154ad0d1b6a2d9d
+Last-Update: 2024-08-31
 Index: lcms2/utils/psicc/psicc.1
 ===================================================================
 --- lcms2.orig/utils/psicc/psicc.1
