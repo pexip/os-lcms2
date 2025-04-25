@@ -9,7 +9,7 @@ Standards-Version: 4.6.2
 Homepage: http://www.littlecms.com/
 Vcs-Git: https://salsa.debian.org/debian/lcms2.git
 Vcs-Browser: https://salsa.debian.org/debian/lcms2
-XS-Pexip-Upstream: http://deb.debian.org/debian/ bookworm
+XS-Pexip-Upstream: http://deb.debian.org/debian/ trixie
 
 Package: liblcms2-dev
 Section: libdevel
