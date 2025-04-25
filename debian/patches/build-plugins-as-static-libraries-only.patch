@@ -1,0 +1,33 @@
+Description: Build plugin libraries only as static libraries
+ The plugins do not have a proper SONAME, so we cannot include them as shared
+ libraries. We build them as static-only libraries to make it clear that this
+ is intentional.
+Author: Thomas Weber <tweber@debian.org>
+Bug-Debian: https://bugs.debian.org/1055502
+Origin: Debian
+Forwarded: not-needed
+Last-Update: 2023-12-31
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/plugins/fast_float/src/meson.build
++++ b/plugins/fast_float/src/meson.build
+@@ -31,7 +31,7 @@
+   endif
+ endif
+
+-liblcms2_fast_float = library(
++liblcms2_fast_float = static_library(
+   'lcms2_fast_float',
+   lcms2_fast_float_sources,
+   gnu_symbol_visibility: 'hidden',
+--- a/plugins/threaded/src/meson.build
++++ b/plugins/threaded/src/meson.build
+@@ -17,7 +17,7 @@
+   liblcms2_threaded_sources += win.compile_resources(lcms2_threaded_rc)
+ endif
+
+-liblcms2_threaded = library(
++liblcms2_threaded = static_library(
+   'lcms2_threaded',
+   liblcms2_threaded_sources,
+   include_directories: lcms2_threaded_incdir,

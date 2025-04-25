@@ -1,3 +1,36 @@
+lcms2 (2.16-2) unstable; urgency=medium
+
+  [ Florian Ernst ]
+  * Don't run the tests in parallel and grant them more time each
+    This allows tests to pass on slower architures
+  * Add metadata to debian/patches/manpages-cleanup.patch
+
+  [ Thomas Weber ]
+  * Upload to unstable (Closes: #1082514)
+  * Bump standards version to 4.7.0, no changes needed
+
+ -- Thomas Weber <tweber@debian.org>  Sun, 13 Oct 2024 13:49:12 +0200
+
+lcms2 (2.16-1) experimental; urgency=medium
+
+  * New upstream version 2.16
+    - Update symbols file for 2.16 release
+    - Update doc-base files for new 2.14 upstream version
+    - Remove patches (applied upstream):
+      - allow-to-read-portions-of-tag.diff
+      - fix-memory-corruption-when-unregistering-plugins.diff
+      - fix-regression-for-CMYK-colours.patch
+    - New patch: unbreak-API-compatibility.patch:
+      The patch reintroduces cmsGetToneCurveParams(), which was removed from
+      the public API without bumping the SONAME.
+    - Switch to Meson build system
+  * Build GPL3 plugins "threaded" and "fastfloat" (Closes: #1055502)
+  * Build and install static library files (Closes: #1038118)
+  * Run tests in the build directory and keep source directory clean
+    (Closes: #1045980)
+
+ -- Thomas Weber <tweber@debian.org>  Thu, 28 Dec 2023 18:53:33 +0100
+
 lcms2 (2.14-2+pexip24u3) pexip-bookworm; urgency=medium
 
   * New versioning scheme

@@ -1,0 +1,48 @@
+Description: Run tests in the build directory
+ Test data files are copied into the build directory so that the tests can run
+ there instead of creating new files in the source directory
+Author: Thomas Weber, <tweber@debian.org>
+Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1045980
+Forwarded: <URL|no|not-needed, useless if you have a Bug field, optional>
+Last-Update: 2023-12-27
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/meson.build
++++ b/meson.build
+@@ -2,7 +2,7 @@
+   'Little-CMS',
+   'c',
+   version: '2.16',
+-  meson_version: '>=0.49.0',
++  meson_version: '>=0.64.0',
+   default_options: ['c_std=gnu11']
+ )
+
+--- a/testbed/meson.build
++++ b/testbed/meson.build
+@@ -4,6 +4,17 @@
+   'zoo_icc.c',
+ )
+
++# copy all iccs to the build dir and run the tests there
++iccs = [
++  'bad.icc', 'crayons.icc', 'new.icc', 'test2.icc', 'test4.icc', 'TestCLT.icc',
++  'bad_mpe.icc', 'ibm-t61.icc', 'test1.icc', 'test3.icc', 'test5.icc',
++  'toosmall.icc'
++]
++fs=import('fs')
++foreach icc : iccs
++  fs.copyfile(icc)
++endforeach
++
+ testcms = executable(
+   'testcms',
+   testcms_srcs,
+@@ -14,6 +25,6 @@
+ test(
+   'testcms',
+   testcms,
+-  workdir: meson.current_source_dir(),
++  workdir: meson.current_build_dir(),
+   timeout: 600,
+ )

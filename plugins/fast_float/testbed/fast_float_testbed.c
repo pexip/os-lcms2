@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------------
 //
 //  Little Color Management System, fast floating point extensions
-//  Copyright (c) 1998-2022 Marti Maria Saguer, all rights reserved
+//  Copyright (c) 1998-2023 Marti Maria Saguer, all rights reserved
 //
 //
 // This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,9 @@
 #    include "crtdbg.h"
 #endif
 
+#ifndef PROFILES_DIR
 #define PROFILES_DIR "../../test_profiles/"
+#endif
 
 // Some pixel representations
 typedef struct { cmsUInt8Number  r, g, b;    }  Scanline_rgb8bits;
@@ -1140,10 +1142,33 @@ void CheckLab2Roundtrip(void)
 
 }
 
+static
+void CheckAlphaDetect(void)
+{
+    cmsHPROFILE hsRGB;
+    cmsHTRANSFORM xform;
+
+    cmsSetLogErrorHandler(NULL);
+
+    hsRGB = cmsCreate_sRGBProfile();
+    
+    xform = cmsCreateTransform(hsRGB, TYPE_RGB_FLT, hsRGB, TYPE_RGBA_FLT, INTENT_PERCEPTUAL, cmsFLAGS_COPY_ALPHA);
+    cmsCloseProfile(hsRGB);
+
+    if (xform != NULL)
+        Fail("Copy alpha with mismatched channels should not succeed");
+
+    cmsSetLogErrorHandler(FatalErrorQuit);
+}
+
 // Convert some known values
 static
 void CheckConversionFloat(void)
 {
+    trace("Check alpha detection.");
+    CheckAlphaDetect();
+    trace("Ok\n");
+
     trace("Crash test.");
     TryAllValuesFloatAlpha(cmsOpenProfileFromFile(PROFILES_DIR "test5.icc", "r"), cmsOpenProfileFromFile(PROFILES_DIR "test0.icc", "r"), INTENT_PERCEPTUAL, FALSE);
 
@@ -1184,6 +1209,8 @@ void CheckConversionFloat(void)
     TryAllValuesFloatVs16(cmsOpenProfileFromFile(PROFILES_DIR "test0.icc", "r"), cmsOpenProfileFromFile(PROFILES_DIR "test0.icc", "r"), INTENT_PERCEPTUAL);
     TryAllValuesFloat(cmsOpenProfileFromFile(PROFILES_DIR "test0.icc", "r"), cmsOpenProfileFromFile(PROFILES_DIR "test0.icc", "r"), INTENT_PERCEPTUAL);
     trace("Ok\n");
+
+
 }
 
 
@@ -2459,7 +2486,7 @@ int main()
 #endif
 
        trace("FastFloating point extensions testbed - 1.6\n");
-       trace("Copyright (c) 1998-2022 Marti Maria Saguer, all rights reserved\n");
+       trace("Copyright (c) 1998-2023 Marti Maria Saguer, all rights reserved\n");
        
        trace("\nInstalling error logger ... ");
        cmsSetLogErrorHandler(FatalErrorQuit);
@@ -2468,7 +2495,7 @@ int main()
        trace("Installing plug-in ... ");
        cmsPlugin(cmsFastFloatExtensions());
        trace("done.\n\n");
-             
+                      
        CheckComputeIncrements();
 
        // 15 bit functionality
@@ -2508,7 +2535,7 @@ int main()
        
        trace("\nAll tests passed OK\n");
 
-       cmsUnregisterPlugins();
+       cmsDeleteContext(0);
 
        return 0;
 }
